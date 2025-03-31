@@ -1,6 +1,23 @@
+# Exported from Render on 2025-03-31T10:00:32Z
 services:
-  - type: web
-    name: my-laravel-app
-    runtime: php
-    buildCommand: "composer install && php artisan migrate"
-    startCommand: "php artisan serve --host=0.0.0.0 --port=10000"
+- type: web
+  name: test-laravel
+  runtime: node
+  repo: https://github.com/hemilchovatiyavits/test-laravel
+  plan: free
+  envVars:
+  - key: PORT
+    sync: false
+  region: oregon
+  buildCommand: '#!/usr/bin/env bash echo "Installing PHP & Composer" apt-get update
+    && apt-get install -y php-cli unzip curl curl -sS https://getcomposer.org/installer
+    | php -- --install-dir=/usr/local/bin --filename=composer  echo "Running Composer
+    Install..." composer install --no-dev --optimize-autoloader --working-dir=/var/www/html  echo
+    "Caching config..." php artisan config:cache  echo "Caching routes..." php artisan
+    route:cache  echo "Running migrations..." php artisan migrate --force  echo "Starting
+    Laravel Server..." php artisan serve --host=0.0.0.0 --port=$PORT'
+  startCommand: '#!/usr/bin/env bash echo "Running composer" composer install --no-dev
+    --working-dir=/var/www/html  echo "Caching config..." php artisan config:cache  echo
+    "Caching routes..." php artisan route:cache  echo "Running migrations..." php
+    artisan migrate --force'
+version: "1"
